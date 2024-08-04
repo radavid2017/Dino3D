@@ -1,3 +1,4 @@
+# C++ Template
 # Prerequisites
 *.d
 
@@ -30,3 +31,7 @@
 *.exe
 *.out
 *.app
+
+# Custom
+/build
+/Build
