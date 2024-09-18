@@ -28,7 +28,7 @@
 /// @file
 /// @brief add short description here
 /// @par Revision History:
-///      $Source: Window.hpp $
+///      $Source: GraphicsEngine.cpp $
 ///      $Revision: 1.1 $
 ///      $Author: Hoka David-Stelian (CEO) (Dino3D) $
 ///      $Date: 2024/08/04 18:50:01 PM
@@ -36,27 +36,61 @@
 ///      $State: in_work $
 //=============================================================================
 
-#ifndef _WINDOW_H_
-#define _WINDOW_H_
+#include "GraphicsEngine.hpp"
+#include <d3d11.h>
 
-#include <Windows.h>
-
-class Window
+GraphicsEngine* GraphicsEngine::get()
 {
-public:
-	Window();
-	bool init();
-	bool broadcast();
-	bool release();
-	bool isRunning();
-	virtual void onCreate() = 0;
-	virtual void onUpdate() = 0;
-	virtual void onDestroy();
-	~Window();
+    static GraphicsEngine engine;
+    return &engine;
+}
 
-protected:
-	HWND m_hwnd;
-	bool m_isRunning;
-};
+GraphicsEngine::GraphicsEngine()
+{
 
-#endif // !_WINDOW_H_
+}
+
+bool GraphicsEngine::init()
+{
+    D3D_DRIVER_TYPE driver_types[] =
+    {
+        D3D_DRIVER_TYPE_HARDWARE,
+        D3D_DRIVER_TYPE_WARP,
+        D3D_DRIVER_TYPE_REFERENCE
+    };
+    UINT num_driver_types = ARRAYSIZE(driver_types);
+    
+    D3D_FEATURE_LEVEL feature_levels[] =
+    {
+        D3D_FEATURE_LEVEL_11_0
+    };
+    UINT num_feature_levels = ARRAYSIZE(feature_levels);
+
+    HRESULT res = 0;
+    for (UINT idx = 0; idx < num_driver_types; idx++)
+    {
+         res = D3D11CreateDevice(NULL, driver_types[idx], NULL, NULL,
+            feature_levels, num_feature_levels, D3D11_SDK_VERSION,
+            &m_d3d_device_p, &m_feature_level_p, &m_imm_context_p);
+         if (SUCCEEDED(res)) break;
+    }
+
+    if (FAILED(res))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool GraphicsEngine::release()
+{
+    m_imm_context_p->Release();
+    m_d3d_device_p->Release();
+    return true;
+}
+
+GraphicsEngine::~GraphicsEngine()
+{
+
+}

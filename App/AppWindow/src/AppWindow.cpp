@@ -37,24 +37,30 @@
 //=============================================================================
 
 #include "AppWindow.hpp"
+#include "GraphicsEngine.hpp"
 
 AppWindow::AppWindow()
 {
+	// Constructor
 }
 
 AppWindow::~AppWindow()
 {
+	// Destructor
 }
 
 void AppWindow::onCreate()
 {
+	GraphicsEngine::get()->init();
 }
 
 void AppWindow::onUpdate()
 {
+	// Update method
 }
 
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
+	GraphicsEngine::get()->release();
 }

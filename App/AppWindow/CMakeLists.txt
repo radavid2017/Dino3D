@@ -28,7 +28,8 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        Window
+        WindowingSystem
+        GraphicsEngine
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

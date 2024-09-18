@@ -19,9 +19,9 @@ endif()
 # Set C++ Standard
 set(CMAKE_CXX_STANDARD 17)
 
-project(Engine)
+project(GameEngine)
 
-set(SOLUTION_DIR "Engine")
+set(SOLUTION_DIR "GameEngine")
 
 set(BUILD_WITH_STATIC_CRT ON)
 

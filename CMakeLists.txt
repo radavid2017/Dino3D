@@ -16,8 +16,8 @@ project(Dino3D)
 
 # Define source directories
 set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/App)
-set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Engine)
-set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Engine/libs)
+set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GameEngine)
+set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GameEngine/libs)
 
 # Collect source files
 file(GLOB_RECURSE APP_SOURCES ${APP_DIR}/*.cpp)
@@ -28,6 +28,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Enable exporting all symbols to generate .lib files
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+# Enable generating XML documentation files
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /doc")
 
 # Optionally enable optimizations and debug info based on the build type
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -45,6 +48,10 @@ function(add_all_subdirectories)
         if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR} AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/CMakeLists.txt)
             message(STATUS "Adding subdirectory: ${SUBDIR}")
             add_subdirectory(${SUBDIR})
+            # Apply documentation flag to each target created in the subdirectory
+            if(TARGET ${SUBDIR})
+                target_compile_options(${SUBDIR} PRIVATE "/doc")
+            endif()
         endif()
     endforeach()
 endfunction()
@@ -61,4 +68,4 @@ endfunction()
 
 # Search for new projects in subfolders
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/App")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Engine")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/GameEngine")

@@ -12,7 +12,7 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(Window)
+project(WindowingSystem)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED

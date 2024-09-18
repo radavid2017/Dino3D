@@ -12,20 +12,32 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(Main)
+project(GraphicsEngine)
 
-add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+# Output of the project will be a SHARED library (dll)
+add_library(${PROJECT_NAME} SHARED
+    "inc/GraphicsEngine.hpp"
+    "src/GraphicsEngine.cpp"
+)
 
 # Setting path to headers
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        ${APP_DIR}/AppWindow/inc
-        ${ENGINE_DIR}/WindowingSystem/inc
+        inc
 )
 
+# Link libraries
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-        AppWindow
+    d3d11.lib
 )
 
-copy_runtime_dependencies()
+# Set the runtime to /MT or /Mtd in order to build properly
+set_property(TARGET ${PROJECT_NAME} PROPERTY
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+)
+
+# Set the solution folder
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    FOLDER ${SOLUTION_DIR}
+    LINK_FLAGS_DEBUG ${GEN_DEBUG}
+)
