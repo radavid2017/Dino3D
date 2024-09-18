@@ -21,5 +21,5 @@ assignees: ''
 - Enter text here
 
 **Legend:**
-- [ ] Not yet started
+- [ ] To do/Ongoing
 - [x] Done/Fixed
