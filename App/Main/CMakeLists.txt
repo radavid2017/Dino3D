@@ -20,7 +20,7 @@ add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${APP_DIR}/AppWindow/inc
-        ${ENGINE_DIR}/Window/inc
+        ${ENGINE_DIR}/WindowingSystem/inc
 )
 
 target_link_libraries(${PROJECT_NAME}
