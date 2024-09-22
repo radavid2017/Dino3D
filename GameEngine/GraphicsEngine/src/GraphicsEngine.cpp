@@ -17,11 +17,14 @@
 //  N O T E S
 //-----------------------------------------------------------------------------
 //  Notes:
+//  - Ensure that the DirectX 11 runtime is available on the target system.
+//  - The GraphicsEngine class should only be used after initializing with init().
 //=============================================================================
 //  I N I T I A L   A U T H O R   I D E N T I T Y
 //-----------------------------------------------------------------------------
 //        Name: Hoka David-Stelian
 //  Department: Project Owner (CEO)
+//     Purpose: Design the core graphics engine wrapper using DirectX 11.
 //=============================================================================
 //  R E V I S I O N   I N F O R M A T I O N
 //-----------------------------------------------------------------------------
@@ -37,7 +40,13 @@
 //=============================================================================
 
 #include "GraphicsEngine.hpp"
+#include "SwapChain.hpp"
 #include <d3d11.h>
+
+SwapChain* GraphicsEngine::createSwapChain()
+{
+    return new SwapChain();
+}
 
 GraphicsEngine* GraphicsEngine::get()
 {
@@ -47,7 +56,11 @@ GraphicsEngine* GraphicsEngine::get()
 
 GraphicsEngine::GraphicsEngine()
 {
-
+    m_d3d_device_p = nullptr;
+    m_dxgi_factory_p = nullptr;
+    m_imm_context_p = nullptr;
+    m_dxgi_device_p = nullptr;
+    m_dxgi_adapter_p = nullptr;
 }
 
 bool GraphicsEngine::init()
@@ -80,13 +93,20 @@ bool GraphicsEngine::init()
         return false;
     }
 
+    m_d3d_device_p->QueryInterface(__uuidof(IDXGIDevice), (void**)&m_dxgi_device_p);
+    m_dxgi_device_p->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter_p);
+    m_dxgi_adapter_p->GetParent(__uuidof(IDXGIFactory), (void**)&m_dxgi_factory_p);
+
     return true;
 }
 
 bool GraphicsEngine::release()
 {
-    m_imm_context_p->Release();
-    m_d3d_device_p->Release();
+    if (m_dxgi_device_p) m_dxgi_device_p->Release();
+    if (m_dxgi_adapter_p) m_dxgi_adapter_p->Release();
+    if (m_dxgi_factory_p) m_dxgi_factory_p->Release();
+    if (m_imm_context_p) m_imm_context_p->Release();
+    if (m_d3d_device_p) m_d3d_device_p->Release();
     return true;
 }
 

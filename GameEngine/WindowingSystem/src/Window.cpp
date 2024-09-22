@@ -44,12 +44,13 @@ Window::Window()
 {
 }
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch (msg)
 	{
 	case WM_CREATE:
 		window->onCreate();
+		window->setHWND(hwnd);
 		break;
 	case WM_DESTROY:
 		window->onDestroy();
@@ -112,14 +113,26 @@ bool Window::broadcast()
 	return true;
 }
 
-bool Window::release()
+bool Window::release() const
 {
 	return ::DestroyWindow(m_hwnd);
 }
 
-bool Window::isRunning()
+bool Window::isRunning() const
 {
 	return m_isRunning;
+}
+
+RECT Window::getClientWindowRect() const
+{
+	RECT rectClient;
+	::GetClientRect(this->m_hwnd, &rectClient);
+	return rectClient;
+}
+
+void Window::setHWND(HWND f_hwnd)
+{
+	this->m_hwnd = f_hwnd;
 }
 
 void Window::onDestroy()

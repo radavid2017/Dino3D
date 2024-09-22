@@ -124,13 +124,16 @@ public:
 	/// Should be called when the window is no longer needed.
 	/// </summary>
 	/// <returns>True if resources are successfully released, false otherwise.</returns>
-	bool release();
+	bool release() const;
 
 	/// <summary>
 	/// Checks if the window is still open and processing messages.
 	/// </summary>
 	/// <returns>True if the window is running, false otherwise.</returns>
-	bool isRunning();
+	bool isRunning() const;
+
+	RECT getClientWindowRect() const;
+	void setHWND(HWND f_hwnd);
 
 	/*--------------------------------------------------------------
 		Virtual Methods

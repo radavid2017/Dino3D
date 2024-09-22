@@ -10,28 +10,28 @@
 // P R O J E C T   I N F O R M A T I O N
 //-----------------------------------------------------------------------------
 //       Project name: Dino3D
-//           Synopsis: Wrapper library for Window abstract class
+//           Synopsis: Definition of the SwapChain class for managing swap chains
 //   Target system(s):
 //        Compiler(s): VS16
 //=============================================================================
 //  N O T E S
 //-----------------------------------------------------------------------------
 //  Notes:
-//  - This class is intended to manage application-specific window behavior.
-//  - Ensure that the window lifecycle methods are properly overridden.
+//  - Ensure that the DirectX 11 runtime is available on the target system.
+//  - The SwapChain class must be properly initialized before use.
 //=============================================================================
 //  I N I T I A L   A U T H O R   I D E N T I T Y
 //-----------------------------------------------------------------------------
 //        Name: Hoka David-Stelian
 //  Department: Project Owner (CEO)
-//     Purpose: Design an application-specific window management class.
+//     Purpose: Design the SwapChain class to manage DirectX swap chains for rendering.
 //=============================================================================
 //  R E V I S I O N   I N F O R M A T I O N
 //-----------------------------------------------------------------------------
 /// @file
-/// @brief Defines the AppWindow class for managing application windows.
+/// @brief Defines the SwapChain class for managing DirectX swap chains.
 /// @par Revision History:
-///      $Source: AppWindow.hpp $
+///      $Source: SwapChain.hpp $
 ///      $Revision: 1.1 $
 ///      $Author: Hoka David-Stelian (CEO) (Dino3D) $
 ///      $Date: 2024/08/04 18:50:01 PM $
@@ -39,41 +39,51 @@
 ///      $State: in_work $
 //=============================================================================
 
-#include "AppWindow.hpp"
-#include "GraphicsEngine.hpp"
 #include "SwapChain.hpp"
+#include "Windows.h"
+#include "IGraphicsEngine.hpp"
+#include "GraphicsEngine.hpp"
+#include "d3d11.h"
 
-AppWindow::AppWindow()
+SwapChain::SwapChain()
 {
-	// Constructor
+	m_swapChain_p = nullptr;
 }
 
-AppWindow::~AppWindow()
+bool SwapChain::init(HWND f_hwnd, UINT f_width, UINT f_height, IGraphicsEngine* f_engine)
 {
-	// Destructor
+	ID3D11Device* device = f_engine->getDevice();
+	IDXGIFactory* factory = f_engine->getDXGIFactory();
+	
+	DXGI_SWAP_CHAIN_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.BufferCount = 1;
+	desc.BufferDesc.Width = f_width;
+	desc.BufferDesc.Height = f_height;
+	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	DEVMODE devMode;
+	bool gotDisplayData = EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &devMode);
+	desc.BufferDesc.RefreshRate.Numerator = gotDisplayData ? devMode.dmDisplayFrequency : 60;
+	desc.BufferDesc.RefreshRate.Denominator = 1;
+	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	desc.OutputWindow = f_hwnd;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Windowed = TRUE;
+
+	// Create the swap chain for the window indicated by HWND parameter
+	HRESULT hresult = factory->CreateSwapChain(device, &desc, &m_swapChain_p);
+	
+	return SUCCEEDED(hresult);
 }
 
-void AppWindow::onCreate()
+bool SwapChain::release()
 {
-	GraphicsEngine::get()->init();
-	m_swap_chain_p = GraphicsEngine::get()->createSwapChain();
-	RECT rectClient = this->getClientWindowRect();
-	LONG rcWidth = rectClient.right - rectClient.left;
-	LONG rcHeight = rectClient.bottom - rectClient.top;
-
-	m_swap_chain_p->init(this->m_hwnd, rcWidth, rcHeight, GraphicsEngine::get());
+	if (m_swapChain_p != nullptr) m_swapChain_p->Release();
+	return true;
 }
 
-void AppWindow::onUpdate()
+SwapChain::~SwapChain()
 {
-	// Update method
-}
 
-void AppWindow::onDestroy()
-{
-	Window::onDestroy();
-	if (m_swap_chain_p != nullptr) {
-		m_swap_chain_p->release();
-	}
-	GraphicsEngine::get()->release();
 }

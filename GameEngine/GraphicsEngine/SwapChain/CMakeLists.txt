@@ -12,25 +12,19 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(AppWindow)
+project(SwapChain)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
-    "inc/AppWindow.hpp"
-    "src/AppWindow.cpp"
+    "inc/SwapChain.hpp"
+    "src/SwapChain.cpp"
 )
 
 # Setting path to headers
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         inc
-)
-
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-        WindowingSystem
-        GraphicsEngine
-        SwapChain
+        ../inc
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly
