@@ -14,8 +14,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: ./github/actions/checkout
+    - name: Checkout current branch
+      run: |
+        git clone https://github.com/radavid2017/Dino3D.git .
+        git checkout $GITHUB_REF
 
     - name: Install CMake
       run: |
