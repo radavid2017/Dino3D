@@ -17,11 +17,14 @@
 //  N O T E S
 //-----------------------------------------------------------------------------
 //  Notes:
+//  - Ensure that the DirectX 11 runtime is available on the target system.
+//  - The GraphicsEngine class should only be used after initializing with init().
 //=============================================================================
 //  I N I T I A L   A U T H O R   I D E N T I T Y
 //-----------------------------------------------------------------------------
 //        Name: Hoka David-Stelian
 //  Department: Project Owner (CEO)
+//     Purpose: Design the core graphics engine wrapper using DirectX 11.
 //=============================================================================
 //  R E V I S I O N   I N F O R M A T I O N
 //-----------------------------------------------------------------------------
@@ -39,7 +42,10 @@
 #ifndef _GRAPHICS_ENGINE_H_
 #define _GRAPHICS_ENGINE_H_
 
+#include "IGraphicsEngine.hpp"
 #include <d3d11.h>
+
+class SwapChain;
 
 /**
  * @class GraphicsEngine
@@ -75,7 +81,8 @@
  * engine->release();
  * @endcode
  */
-class GraphicsEngine {
+class GraphicsEngine : public IGraphicsEngine 
+{
 
 public:
 
@@ -137,6 +144,27 @@ public:
     /// <returns>True if resources were successfully released, false if an error occurred.</returns>
     bool release();
 
+    /// <summary>
+    /// Creates a SwapChain instance associated with the GraphicsEngine.
+    /// The SwapChain is responsible for managing buffers for displaying rendered images.
+    /// </summary>
+    /// <returns>A pointer to the newly created SwapChain instance.</returns>
+    SwapChain* createSwapChain();
+
+    /// <summary>
+    /// Retrieves the DirectX 11 device associated with the GraphicsEngine.
+    /// The device is used to create and manage resources like buffers and shaders.
+    /// </summary>
+    /// <returns>A pointer to the ID3D11Device instance.</returns>
+    ID3D11Device* getDevice() override { return m_d3d_device_p; }
+
+    /// <summary>
+    /// Retrieves the DXGI factory associated with the GraphicsEngine.
+    /// The factory is responsible for creating DXGI objects such as swap chains and adapters.
+    /// </summary>
+    /// <returns>A pointer to the IDXGIFactory instance.</returns>
+    IDXGIFactory* getDXGIFactory() override { return m_dxgi_factory_p; }
+
 private:
 
     /*--------------------------------------------------------------
@@ -160,6 +188,36 @@ private:
     /// The context is used to issue rendering commands to the GPU.
     /// </summary>
     ID3D11DeviceContext* m_imm_context_p = nullptr;
+
+    /// <summary>
+    /// A pointer to the DXGI device interface.
+    /// This is used to handle interactions between DirectX and the low-level device interfaces.
+    /// </summary>
+    IDXGIDevice* m_dxgi_device_p;
+
+    /// <summary>
+    /// A pointer to the DXGI adapter.
+    /// This adapter represents the physical GPU or virtual GPU adapter.
+    /// </summary>
+    IDXGIAdapter* m_dxgi_adapter_p;
+
+    /// <summary>
+    /// A pointer to the DXGI factory.
+    /// This factory is responsible for creating DXGI objects such as swap chains and adapters.
+    /// </summary>
+    IDXGIFactory* m_dxgi_factory_p;
+
+    /*--------------------------------------------------------------
+        Friends
+    --------------------------------------------------------------*/
+
+    /// <summary>
+    /// Declares SwapChain as a friend class, allowing it access to the private members
+    /// of GraphicsEngine. This is necessary because the SwapChain class needs direct
+    /// access to certain low-level DirectX objects managed by GraphicsEngine, such as
+    /// the device and context, to function properly.
+    /// </summary>
+    friend class SwapChain;
 };
 
 #endif // !_GRAPHICS_ENGINE_H_

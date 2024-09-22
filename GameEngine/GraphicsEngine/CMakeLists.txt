@@ -16,6 +16,7 @@ project(GraphicsEngine)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
+    "inc/IGraphicsEngine.hpp"
     "inc/GraphicsEngine.hpp"
     "src/GraphicsEngine.cpp"
 )
@@ -24,11 +25,13 @@ add_library(${PROJECT_NAME} SHARED
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         inc
+        SwapChain/inc
 )
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME}
     d3d11.lib
+    SwapChain
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly
@@ -41,3 +44,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     FOLDER ${SOLUTION_DIR}
     LINK_FLAGS_DEBUG ${GEN_DEBUG}
 )
+
+add_all_subdirectories()

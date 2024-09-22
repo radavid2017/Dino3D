@@ -30,6 +30,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC
         WindowingSystem
         GraphicsEngine
+        SwapChain
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly
