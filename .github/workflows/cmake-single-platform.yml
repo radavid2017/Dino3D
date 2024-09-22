@@ -11,20 +11,20 @@ env:
 
 jobs:
   build:
-    # Run on Windows
     runs-on: windows-latest
 
     steps:
     - name: Checkout repository
-      # Use the local action, copied to repo
       uses: ./github/actions/checkout
 
-    - name: Set up CMake
-      # Install CMake using specific action
-      uses: lukka/get-cmake@v3
+    - name: Install CMake
+      run: |
+        echo Installing CMake...
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+        cmake --version
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja" # Or MSBuild
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
