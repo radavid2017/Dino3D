@@ -19,11 +19,13 @@ jobs:
         git clone https://github.com/radavid2017/Dino3D.git .
         git checkout $GITHUB_REF
 
-    - name: Install CMake
+    - name: Install CMake and Ninja
       run: |
-        echo Installing CMake...
+        echo Installing CMake and Ninja...
         choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+        choco install ninja --yes
         cmake --version
+        ninja --version
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
