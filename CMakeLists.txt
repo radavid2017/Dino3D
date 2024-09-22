@@ -69,3 +69,4 @@ endfunction()
 # Search for new projects in subfolders
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/App")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/GameEngine")
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Main)
