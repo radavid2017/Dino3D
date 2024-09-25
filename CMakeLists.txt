@@ -32,6 +32,15 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 # Enable generating XML documentation files
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /doc")
 
+# Optionally enable optimizations and debug info based on the build type
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    message(STATUS "Debug build")
+    target_compile_options(Dino3D PUBLIC -g)
+elseif (CMAKE_BUILD_TYPE MATCHES Release)
+    message(STATUS "Release build")
+    target_compile_options(Dino3D PUBLIC -O3)
+endif()
+
 # Function to add all subdirectories
 function(add_all_subdirectories)
     file(GLOB SUBDIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
