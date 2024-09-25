@@ -17,7 +17,7 @@ jobs:
     - name: Checkout current branch
       run: |
         git clone https://github.com/radavid2017/Dino3D.git .
-        git checkout $GITHUB_REF
+        git checkout $GITHUB_SHA  # checkout la commit-ul curent în loc de branch
 
     - name: Install CMake and Ninja
       run: |
@@ -28,11 +28,11 @@ jobs:
         ninja --version
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build build --config ${{env.BUILD_TYPE}}
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
+      working-directory: build
       run: ctest -C ${{env.BUILD_TYPE}}
