@@ -12,10 +12,8 @@ env:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-    - name: Checkout repository
-      uses: ./github/actions/checkout@v2
+    - uses: actions/checkout@v2
 
     - name: Install CMake
       run: |
