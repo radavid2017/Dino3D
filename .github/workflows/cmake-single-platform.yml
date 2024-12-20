@@ -2,9 +2,9 @@ name: CMake on Windows
 
 on:
   push:
-    branches: [ "*" ]  # Rulare pe toate branch-urile
+    branches: [ "main" ]
   pull_request:
-    branches: [ "*" ]  # Rulare și pentru PR-uri din orice branch
+    branches: [ "main" ]
 
 env:
   BUILD_TYPE: Release
@@ -13,28 +13,23 @@ jobs:
   build:
     runs-on: windows-latest
 
-    steps:
+     steps:
     - name: Checkout current branch
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.ref }}
-
-    - name: Install CMake
       run: |
-        echo Installing CMake...
-        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
-        echo Installed CMake
-        cmake --version
+        echo Checking out branch from PR...
+        git fetch origin ${{ github.head_ref }}:${{ github.head_ref }}
+        git checkout ${{ github.head_ref }}
+        git pull origin ${{ github.head_ref }}
+        
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: LFS Pull
       run: git lfs pull
 
-    - name: Configure CMake
-      run: cmake -B ${{ github.workspace }}/build/Dino3D -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-
     - name: Build
-      run: cmake --build ${{ github.workspace }}/build/Dino3D --config ${{ env.BUILD_TYPE }}
+      run: cmake --build ${{github.workspace}}/build/Dino3D --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: build
-      run: ctest -C ${{ env.BUILD_TYPE }}
+      run: ctest -C ${{env.BUILD_TYPE}}
