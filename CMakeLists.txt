@@ -40,7 +40,7 @@ function(add_all_subdirectories)
             message(STATUS "Adding subdirectory: ${SUBDIR}")
             add_subdirectory(${SUBDIR})
             # Apply documentation flag to each target created in the subdirectory
-            if(TARGET ${SUBDIR})
+            if(MSVC AND TARGET ${SUBDIR})
                 target_compile_options(${SUBDIR} PRIVATE "/doc")
             endif()
         endif()

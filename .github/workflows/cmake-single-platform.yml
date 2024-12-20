@@ -19,14 +19,16 @@ jobs:
         git clone https://github.com/radavid2017/Dino3D.git .
         git checkout $GITHUB_SHA  # checkout la commit-ul curent în loc de branch
 
-    - name: Install CMake
+    - name: Install CMake and Ninja
       run: |
-        echo Installing CMake...
+        echo Installing CMake and Ninja...
         choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+        choco install ninja --yes
         cmake --version
+        ninja --version
 
     - name: Configure CMake
-      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Visual Studio 16 2019"
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
 
     - name: Build
       run: cmake --build build --config ${{env.BUILD_TYPE}}
