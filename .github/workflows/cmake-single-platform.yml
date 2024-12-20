@@ -24,6 +24,12 @@ jobs:
       with:
         repository: https://github.com/radavid2017/Dino3D.git
 
+    - name: Install CMake
+      run: |
+        echo Installing CMake...
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+        cmake --version
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
