@@ -2,9 +2,9 @@ name: CMake on Windows
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]  # Rulare pe toate branch-urile
   pull_request:
-    branches: [ "main" ]
+    branches: [ "*" ]  # Rulare și pentru PR-uri din orice branch
 
 env:
   BUILD_TYPE: Release
@@ -15,9 +15,9 @@ jobs:
 
     steps:
     - name: Checkout current branch
-      run: |
-        git clone https://github.com/radavid2017/Dino3D.git .
-        git checkout $GITHUB_SHA  # checkout la commit-ul curent în loc de branch
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
 
     - name: Install CMake
       run: |
@@ -26,15 +26,15 @@ jobs:
         echo Installed CMake
         cmake --version
 
-    - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
     - name: LFS Pull
       run: git lfs pull
 
+    - name: Configure CMake
+      run: cmake -B ${{ github.workspace }}/build/Dino3D -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
     - name: Build
-      run: cmake --build ${{github.workspace}}/build/Dino3D --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{ github.workspace }}/build/Dino3D --config ${{ env.BUILD_TYPE }}
 
     - name: Test
       working-directory: build
-      run: ctest -C ${{env.BUILD_TYPE}}
+      run: ctest -C ${{ env.BUILD_TYPE }}
