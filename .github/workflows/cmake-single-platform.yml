@@ -11,30 +11,17 @@ env:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: [Windows]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 
-        ref: ${{ github.head_ref }} 
 
-    - name: Install CMake
-      run: |
-        echo Installing CMake...
-        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
-        echo Installed CMake
-        cmake --version
+    - uses: actions/checkout@v3
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
-    - name: LFS Pull
-      run: git lfs pull
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build/Dino3D --config ${{env.BUILD_TYPE}}
+      run: cmake --build build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: build
