@@ -14,12 +14,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout current branch
-      run: |
-        echo Checking out branch from PR...
-        git fetch origin ${{ github.head_ref }}:${{ github.head_ref }}
-        git checkout ${{ github.head_ref }}
-        git pull origin ${{ github.head_ref }}
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Asigură că toate commit-urile sunt disponibile
+        ref: ${{ github.head_ref }}  # Checkout pe branch-ul din PR
 
     - name: Install CMake
       run: |
