@@ -1,4 +1,4 @@
-name: Dino3D Build
+name: CMake on Windows
 
 on:
   push:
