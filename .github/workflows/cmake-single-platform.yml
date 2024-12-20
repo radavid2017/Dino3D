@@ -16,6 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install CMake
+      run: |
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+        cmake --version
+
     - name: Configure CMake
       run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
 
