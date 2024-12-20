@@ -1,4 +1,4 @@
-name: Build Dino3D Project
+name: CMake on Windows
 
 on:
   push:
@@ -14,31 +14,25 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0  # Obține toată istoria pentru a putea accesa commit-urile anterioare
-
-    - name: Set up the branch
+    - name: Checkout current branch
       run: |
-        echo "Current branch is: $GITHUB_REF"
-        git checkout $GITHUB_REF  # Schimbă pe ramura specificată în PR
+        git clone https://github.com/radavid2017/Dino3D.git .
+        git checkout $GITHUB_SHA  # checkout la commit-ul curent în loc de branch
 
-    - name: Install dependencies (CMake and Ninja)
+    - name: Install CMake and Ninja
       run: |
+        echo Installing CMake and Ninja...
         choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
         choco install ninja --yes
         cmake --version
         ninja --version
 
-    - name: Configure CMake project
+    - name: Configure CMake
       run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Ninja"
-      shell: bash
 
-    - name: Build project with Ninja
-      run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
-      shell: bash
+    - name: Build
+      run: cmake --build build --config ${{env.BUILD_TYPE}}
 
-    - name: Run tests
+    - name: Test
       working-directory: build
-      run: ctest --output-on-failure -C ${{env.BUILD_TYPE}}
+      run: ctest -C ${{env.BUILD_TYPE}}
