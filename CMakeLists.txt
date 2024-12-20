@@ -39,7 +39,10 @@ function(add_all_subdirectories)
         if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR} AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SUBDIR}/CMakeLists.txt)
             message(STATUS "Adding subdirectory: ${SUBDIR}")
             add_subdirectory(${SUBDIR})
-            
+            # Apply documentation flag to each target created in the subdirectory
+            if(MSVC AND TARGET ${SUBDIR})
+                target_compile_options(${SUBDIR} PRIVATE "/doc")
+            endif()
         endif()
     endforeach()
 endfunction()
