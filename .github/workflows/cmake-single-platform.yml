@@ -13,14 +13,21 @@ jobs:
   build:
     runs-on: windows-latest
 
-     steps:
+    steps:
     - name: Checkout current branch
       run: |
         echo Checking out branch from PR...
         git fetch origin ${{ github.head_ref }}:${{ github.head_ref }}
         git checkout ${{ github.head_ref }}
         git pull origin ${{ github.head_ref }}
-        
+
+    - name: Install CMake
+      run: |
+        echo Installing CMake...
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+        echo Installed CMake
+        cmake --version
+
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
