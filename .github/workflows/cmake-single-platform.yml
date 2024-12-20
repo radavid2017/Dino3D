@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: ./github/actions/checkout
+      uses: actions/checkout@v2
 
     - name: Install CMake
       run: |
