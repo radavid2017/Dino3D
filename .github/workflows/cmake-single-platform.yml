@@ -36,11 +36,3 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build/Dino3D --config ${{env.BUILD_TYPE}}
-
-    - name: 'Upload Artifact (Dino3D Plugins)'
-      uses: actions/upload-artifact@v3
-      with:
-        name: Dino3D Plugins
-        path: |
-          build/Dino3D/Plugins/**/*.dll
-          build/Dino3D/Tutorials/**/*.dll
