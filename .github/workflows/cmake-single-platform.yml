@@ -1,4 +1,4 @@
-name: Dino3D Build
+name: CMake on Windows
 
 on:
   push:
@@ -10,29 +10,28 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build_linux:
-    runs-on: [ Linux ]
+  build:
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout current branch
+      run: |
+        git clone --depth 1 https://github.com/radavid2017/Dino3D.git .
+        git checkout $GITHUB_SHA  # Ensure the workflow runs on the exact commit that triggered the workflow
 
-    - name: LFS Pull
-      run: git lfs pull
-
-    - name: BuildLinux
-      run: ${{github.workspace}}/LinuxBuild.sh
-
-  build_windows:
-    runs-on: [ Windows ]
-
-    steps:
-    - uses: actions/checkout@v3
+    - name: Install CMake and Ninja
+      run: |
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+        choco install ninja --installargs 'ADD_NINJA_TO_PATH=System' --yes
+        cmake --version
+        ninja --version
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
-    - name: LFS Pull
-      run: git lfs pull
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G "Ninja"
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build/Dino3D --config ${{env.BUILD_TYPE}}
+      run: cmake --build build --config ${{ env.BUILD_TYPE }}
+      run: cmake --build build --config ${{ env.BUILD_TYPE }}
+    - name: Test
+      working-directory: build
+      run: ctest -C ${{ env.BUILD_TYPE }}
