@@ -17,12 +17,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # Obține toată istoria pentru a putea accesa commit-urile anterioare
+        fetch-depth: 0
 
     - name: Set up the branch
       run: |
-        echo "Current branch is: $GITHUB_REF"
-        git checkout $GITHUB_REF  # Schimbă pe ramura specificată în PR
+        echo "Current branch is: ${{ github.head_ref || github.ref_name }}"
+        git checkout ${{ github.head_ref || github.ref_name }}
 
     - name: Install dependencies (CMake and Ninja)
       run: |
@@ -42,3 +42,9 @@ jobs:
     - name: Run tests
       working-directory: build
       run: ctest --output-on-failure -C ${{env.BUILD_TYPE}}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Dino3D-Build
+        path: build/
