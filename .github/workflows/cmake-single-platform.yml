@@ -1,4 +1,4 @@
-name: CMake on Windows
+name: Dino3D Build
 
 on:
   push:
@@ -10,26 +10,26 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
-    runs-on: windows-latest
+  build_linux:
+    runs-on: [ Linux ]
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+    - uses: actions/checkout@v3
 
-    - name: Install Dependencies
-      run: |
-        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
-        choco install ninja --yes
-        choco install git-lfs --yes
-        git lfs install
-        cmake --version
-        ninja --version
+    - name: LFS Pull
+      run: git lfs pull
+
+    - name: BuildLinux
+      run: ${{github.workspace}}/LinuxBuild.sh
+
+  build_windows:
+    runs-on: [ Windows ]
+
+    steps:
+    - uses: actions/checkout@v3
 
     - name: Configure CMake
-      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: LFS Pull
       run: git lfs pull
@@ -37,6 +37,10 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build/Dino3D --config ${{env.BUILD_TYPE}}
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build/Dino3D
-      run: ctest -C ${{env.BUILD_TYPE}}
+    - name: 'Upload Artifact (Dino3D Plugins)'
+      uses: actions/upload-artifact@v3
+      with:
+        name: Dino3D Plugins
+        path: |
+          build/Dino3D/Plugins/**/*.dll
+          build/Dino3D/Tutorials/**/*.dll
