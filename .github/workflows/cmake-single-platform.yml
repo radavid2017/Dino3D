@@ -1,26 +1,26 @@
-name: Build Latest Commit
+name: Dino3D Build
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
+
+env:
+  BUILD_TYPE: Release
 
 jobs:
-  build:
-    runs-on: windows-latest
+  build_windows:
+    runs-on: [ Windows ]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up CMake
-      uses: lukka/get-cmake@v3
+    - uses: actions/checkout@v3
 
     - name: Configure CMake
-      run: cmake -S . -B build
+      run: cmake -B ${{github.workspace}}/build/Dino3D -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: LFS Pull
+      run: git lfs pull
 
     - name: Build
-      run: cmake --build build
+      run: cmake --build ${{github.workspace}}/build/Dino3D --config ${{env.BUILD_TYPE}}
