@@ -33,13 +33,25 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /doc")
 
 # Optionally enable optimizations and debug info based on the build type
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    message(STATUS "Debug build")
-    target_compile_options(Dino3D PUBLIC -g)
-elseif (CMAKE_BUILD_TYPE MATCHES Release)
-    message(STATUS "Release build")
-    target_compile_options(Dino3D PUBLIC -O3)
-endif()
+function(apply_compile_options_except excluded_target)
+    if (CMAKE_BUILD_TYPE MATCHES Debug)
+        message(STATUS "Debug build")
+        foreach(target ${ALL_TARGETS})
+            if (NOT target STREQUAL ${excluded_target})
+                target_compile_options(${target} PUBLIC -g)
+            endif()
+        endforeach()
+    elseif (CMAKE_BUILD_TYPE MATCHES Release)
+        message(STATUS "Release build")
+        foreach(target ${ALL_TARGETS})
+            if (NOT target STREQUAL ${excluded_target})
+                target_compile_options(${target} PUBLIC -O3)
+            endif()
+        endforeach()
+    endif()
+endfunction()
+
+set(ALL_TARGETS) # Initialize an empty list to collect all targets
 
 # Function to add all subdirectories
 function(add_all_subdirectories)
@@ -55,6 +67,12 @@ function(add_all_subdirectories)
         endif()
     endforeach()
 endfunction()
+
+# Collect all targets
+get_property(ALL_TARGETS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY BUILDSYSTEM_TARGETS)
+
+# Apply compile options to all except Dino3D
+apply_compile_options_except("Dino3D")
 
 function(copy_runtime_dependencies)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
