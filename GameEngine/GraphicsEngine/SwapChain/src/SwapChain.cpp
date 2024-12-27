@@ -47,7 +47,6 @@
 
 SwapChain::SwapChain()
 {
-	m_swapChain_p = nullptr;
 }
 
 bool SwapChain::init(HWND f_hwnd, UINT f_width, UINT f_height, IGraphicsEngine* f_engine)

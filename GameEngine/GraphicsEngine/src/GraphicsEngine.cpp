@@ -56,11 +56,6 @@ GraphicsEngine* GraphicsEngine::get()
 
 GraphicsEngine::GraphicsEngine()
 {
-    m_d3d_device_p = nullptr;
-    m_dxgi_factory_p = nullptr;
-    m_imm_context_p = nullptr;
-    m_dxgi_device_p = nullptr;
-    m_dxgi_adapter_p = nullptr;
 }
 
 bool GraphicsEngine::init()

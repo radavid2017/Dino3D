@@ -42,6 +42,7 @@
 #include "AppWindow.hpp"
 #include "GraphicsEngine.hpp"
 #include "SwapChain.hpp"
+#include <iostream>
 
 AppWindow::AppWindow()
 {
@@ -61,7 +62,10 @@ void AppWindow::onCreate()
 	LONG rcWidth = rectClient.right - rectClient.left;
 	LONG rcHeight = rectClient.bottom - rectClient.top;
 
-	m_swap_chain_p->init(this->m_hwnd, rcWidth, rcHeight, GraphicsEngine::get());
+	if (!m_swap_chain_p->init(this->m_hwnd, rcWidth, rcHeight, GraphicsEngine::get()))
+	{
+		std::cout << "Swap chain initialization failed" << std::endl;
+	}
 }
 
 void AppWindow::onUpdate()
