@@ -41,11 +41,17 @@
 
 #include "GraphicsEngine.hpp"
 #include "SwapChain.hpp"
+#include "DeviceContext.hpp"
 #include <d3d11.h>
 
 SwapChain* GraphicsEngine::createSwapChain()
 {
     return new SwapChain();
+}
+
+DeviceContext* GraphicsEngine::getImmediateDeviceContext()
+{
+    return this->m_imm_device_context_p;
 }
 
 GraphicsEngine* GraphicsEngine::get()
@@ -56,11 +62,6 @@ GraphicsEngine* GraphicsEngine::get()
 
 GraphicsEngine::GraphicsEngine()
 {
-    m_d3d_device_p = nullptr;
-    m_dxgi_factory_p = nullptr;
-    m_imm_context_p = nullptr;
-    m_dxgi_device_p = nullptr;
-    m_dxgi_adapter_p = nullptr;
 }
 
 bool GraphicsEngine::init()
@@ -80,11 +81,12 @@ bool GraphicsEngine::init()
     UINT num_feature_levels = ARRAYSIZE(feature_levels);
 
     HRESULT res = 0;
+    ID3D11DeviceContext* imm_context_p;
     for (UINT idx = 0; idx < num_driver_types; idx++)
     {
          res = D3D11CreateDevice(NULL, driver_types[idx], NULL, NULL,
             feature_levels, num_feature_levels, D3D11_SDK_VERSION,
-            &m_d3d_device_p, &m_feature_level_p, &m_imm_context_p);
+            &m_d3d_device_p, &m_feature_level_p, &imm_context_p);
          if (SUCCEEDED(res)) break;
     }
 
@@ -92,6 +94,8 @@ bool GraphicsEngine::init()
     {
         return false;
     }
+
+    m_imm_device_context_p = new DeviceContext(imm_context_p);
 
     m_d3d_device_p->QueryInterface(__uuidof(IDXGIDevice), (void**)&m_dxgi_device_p);
     m_dxgi_device_p->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter_p);
@@ -105,7 +109,7 @@ bool GraphicsEngine::release()
     if (m_dxgi_device_p) m_dxgi_device_p->Release();
     if (m_dxgi_adapter_p) m_dxgi_adapter_p->Release();
     if (m_dxgi_factory_p) m_dxgi_factory_p->Release();
-    if (m_imm_context_p) m_imm_context_p->Release();
+    if (m_imm_device_context_p) m_imm_device_context_p->release();
     if (m_d3d_device_p) m_d3d_device_p->Release();
     return true;
 }

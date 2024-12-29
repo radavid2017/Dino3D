@@ -38,7 +38,6 @@
 
 #include "Window.hpp"
 
-Window *window = nullptr;
 
 Window::Window()
 {
@@ -49,13 +48,20 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 	switch (msg)
 	{
 	case WM_CREATE:
-		window->onCreate();
+	{
+		Window* window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
 		window->setHWND(hwnd);
+		window->onCreate();
 		break;
+	}
 	case WM_DESTROY:
+	{
+		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		window->onDestroy();
 		::PostQuitMessage(0);
 		break;
+	}
 	default:
 		return ::DefWindowProc(hwnd, msg, wparam, lparam);
 	}
@@ -80,21 +86,20 @@ bool Window::init()
 	wc.lpfnWndProc = &WndProc;
 
 	if (::RegisterClassEx(&wc) == false)
-		return false;
+		return false; // Registration of class failed
 
-	if (window == nullptr)
-	{
-		window = this;
-	}
-
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "WindowClass", "Dino3D", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, NULL, NULL, NULL, NULL);
+	// Creation of the window
+	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "WindowClass", "Dino3D", 
+		WS_CAPTION|WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, NULL, NULL, NULL, this);
 
 	if (!m_hwnd)
-		return false;
+		return false; // Creation  of window failed
 
+	// Show up the window
 	::ShowWindow(m_hwnd, SW_SHOW);
 	::UpdateWindow(m_hwnd);
 
+	//set this flag to true to indicate that the window is initialized and running
 	m_isRunning = true;
 
 	return true;
@@ -103,13 +108,17 @@ bool Window::init()
 bool Window::broadcast()
 {
 	MSG msg;
+
+	this->onUpdate();
+
 	while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-	window->onUpdate();
+
 	Sleep(0);
+	
 	return true;
 }
 
@@ -123,7 +132,7 @@ bool Window::isRunning() const
 	return m_isRunning;
 }
 
-RECT Window::getClientWindowRect() const
+RECT Window::getClientWindowRect()
 {
 	RECT rectClient;
 	::GetClientRect(this->m_hwnd, &rectClient);

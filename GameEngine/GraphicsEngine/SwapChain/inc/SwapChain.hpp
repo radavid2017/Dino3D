@@ -51,6 +51,10 @@ typedef unsigned int UINT; // Define UINT as an unsigned int
 class IDXGISwapChain; // Forward declaration for IDXGISwapChain
 class IGraphicsEngine; // Forward declaration for IGraphicsEngine
 
+class ID3D11RenderTargetView;
+
+class DeviceContext;
+
 /**
  * @class SwapChain
  * @brief Manages the swap chain for rendering in DirectX.
@@ -93,6 +97,8 @@ public:
 	/// <returns>True if initialization is successful, false otherwise.</returns>
 	bool init(HWND f_hwnd, UINT f_width, UINT f_height, IGraphicsEngine* f_engine);
 
+	bool present(bool vsync);
+
 	/// <summary>
 	/// Releases resources associated with the swap chain.
 	/// This method should be called to clean up resources when done.
@@ -111,6 +117,10 @@ private:
 	/// This interface is used to manage the swap chain operations.
 	/// </summary>
 	IDXGISwapChain* m_swapChain_p;
+
+	ID3D11RenderTargetView* m_rtv;
+
+	friend class DeviceContext;
 };
 
 #endif // !_SWAP_CHAIN_H_

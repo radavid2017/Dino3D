@@ -132,7 +132,7 @@ public:
 	/// <returns>True if the window is running, false otherwise.</returns>
 	bool isRunning() const;
 
-	RECT getClientWindowRect() const;
+	RECT getClientWindowRect();
 	void setHWND(HWND f_hwnd);
 
 	/*--------------------------------------------------------------
