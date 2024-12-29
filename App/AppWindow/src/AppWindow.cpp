@@ -42,6 +42,7 @@
 #include "AppWindow.hpp"
 #include "GraphicsEngine.hpp"
 #include "SwapChain.hpp"
+#include "DeviceContext.hpp"
 #include <iostream>
 
 AppWindow::AppWindow()
@@ -70,7 +71,14 @@ void AppWindow::onCreate()
 
 void AppWindow::onUpdate()
 {
-	// Update method
+	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain_p,
+		1, 1, 0, 1);
+
+
+
+
+
+	m_swap_chain_p->present(true);
 }
 
 void AppWindow::onDestroy()

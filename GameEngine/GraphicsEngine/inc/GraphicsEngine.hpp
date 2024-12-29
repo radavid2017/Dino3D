@@ -46,6 +46,7 @@
 #include <d3d11.h>
 
 class SwapChain;
+class DeviceContext;
 
 /**
  * @class GraphicsEngine
@@ -151,6 +152,8 @@ public:
     /// <returns>A pointer to the newly created SwapChain instance.</returns>
     SwapChain* createSwapChain();
 
+    DeviceContext* getImmediateDeviceContext();
+
     /// <summary>
     /// Retrieves the DirectX 11 device associated with the GraphicsEngine.
     /// The device is used to create and manage resources like buffers and shaders.
@@ -187,7 +190,7 @@ private:
     /// A pointer to the immediate device context.
     /// The context is used to issue rendering commands to the GPU.
     /// </summary>
-    ID3D11DeviceContext* m_imm_context_p = nullptr;
+    DeviceContext* m_imm_device_context_p = nullptr;
 
     /// <summary>
     /// A pointer to the DXGI device interface.

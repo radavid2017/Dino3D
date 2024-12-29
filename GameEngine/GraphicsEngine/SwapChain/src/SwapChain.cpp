@@ -73,7 +73,29 @@ bool SwapChain::init(HWND f_hwnd, UINT f_width, UINT f_height, IGraphicsEngine* 
 	// Create the swap chain for the window indicated by HWND parameter
 	HRESULT hresult = factory->CreateSwapChain(device, &desc, &m_swapChain_p);
 	
+	if (FAILED(hresult))
+	{
+		return false;
+	}
+
+	ID3D11Texture2D* buffer = NULL;
+	hresult = m_swapChain_p->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
+
+	if (FAILED(hresult))
+	{
+		return false;
+	}
+
+	hresult = device->CreateRenderTargetView(buffer, NULL, &m_rtv);
+	buffer->Release();
+
 	return SUCCEEDED(hresult);
+}
+
+bool SwapChain::present(bool vsync)
+{
+	m_swapChain_p->Present(vsync, NULL);
+	return true;
 }
 
 bool SwapChain::release()
