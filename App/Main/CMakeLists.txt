@@ -29,3 +29,10 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 copy_runtime_dependencies()
+
+# Custom command to copy shader.fx to the project directory
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/shader.fx
+    ${CMAKE_CURRENT_BINARY_DIR}/shader.fx
+)
