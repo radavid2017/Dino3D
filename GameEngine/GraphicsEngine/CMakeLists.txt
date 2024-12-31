@@ -27,13 +27,16 @@ target_include_directories(${PROJECT_NAME}
         inc
         SwapChain/inc
         DeviceContext/inc
+        VertexBuffer/inc
 )
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME}
     d3d11.lib
+    d3dcompiler.lib
     SwapChain
     DeviceContext
+    VertexBuffer
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

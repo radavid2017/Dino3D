@@ -31,6 +31,7 @@ target_link_libraries(${PROJECT_NAME}
         WindowingSystem
         GraphicsEngine
         SwapChain
+        VertexBuffer
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

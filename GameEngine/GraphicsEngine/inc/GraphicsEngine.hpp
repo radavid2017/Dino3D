@@ -47,6 +47,7 @@
 
 class SwapChain;
 class DeviceContext;
+class VertexBuffer;
 
 /**
  * @class GraphicsEngine
@@ -152,14 +153,43 @@ public:
     /// <returns>A pointer to the newly created SwapChain instance.</returns>
     SwapChain* createSwapChain();
 
+    /// <summary>
+	/// Creates a DeviceContext instance associated with the GraphicsEngine.
+    /// </summary>
+    /// <returns></returns>
     DeviceContext* getImmediateDeviceContext();
+
+	/// <summary>
+	/// Creates a VertexBuffer instance associated with the GraphicsEngine.
+	/// </summary>
+	/// <returns></returns>
+	VertexBuffer* createVertexBuffer();
+
+	/// <summary>
+	/// Creates the shaders for the GraphicsEngine.
+	/// </summary>
+	/// <returns></returns>
+	bool createShaders();
+
+	/// <summary>
+	/// Sets the shaders for the GraphicsEngine.
+	/// </summary>
+	/// <returns></returns>
+	bool setShaders();
+
+	/// <summary>
+	/// Sets the input layout for the GraphicsEngine.
+	/// </summary>
+	/// <param name="bytecode"></param>
+	/// <param name="size"></param>
+	void getShaderBufferAndSize(void** bytecode, UINT* size);
 
     /// <summary>
     /// Retrieves the DirectX 11 device associated with the GraphicsEngine.
     /// The device is used to create and manage resources like buffers and shaders.
     /// </summary>
     /// <returns>A pointer to the ID3D11Device instance.</returns>
-    ID3D11Device* getDevice() override { return m_d3d_device_p; }
+    ID3D11Device* getDevice() override { return m_d3d_device; }
 
     /// <summary>
     /// Retrieves the DXGI factory associated with the GraphicsEngine.
@@ -174,11 +204,13 @@ private:
         Private Data Members
     --------------------------------------------------------------*/
 
+    ID3D11DeviceContext* m_imm_context;
+
     /// <summary>
     /// A pointer to the DirectX 11 device interface.
     /// This device is used to create resources such as buffers and textures.
     /// </summary>
-    ID3D11Device* m_d3d_device_p = nullptr;
+    ID3D11Device* m_d3d_device = nullptr;
 
     /// <summary>
     /// A pointer to the feature level of the DirectX device.
@@ -210,6 +242,26 @@ private:
     /// </summary>
     IDXGIFactory* m_dxgi_factory_p;
 
+    /// <summary>
+	/// A pointer to the vertex shader blob.
+    /// </summary>
+    ID3DBlob* m_vsblob = nullptr;
+    
+    /// <summary>
+	/// A pointer to the pixel shader blob.
+    /// </summary>
+    ID3DBlob* m_psblob = nullptr;
+
+    /// <summary>
+	/// A pointer to the vertex shader.
+    /// </summary>
+    ID3D11VertexShader* m_vs = nullptr;
+
+    /// <summary>
+	/// A pointer to the pixel shader.
+    /// </summary>
+    ID3D11PixelShader* m_ps = nullptr;
+
     /*--------------------------------------------------------------
         Friends
     --------------------------------------------------------------*/
@@ -221,6 +273,11 @@ private:
     /// the device and context, to function properly.
     /// </summary>
     friend class SwapChain;
+
+	/// <summary>
+	/// Declares VertexBuffer as a friend class, allowing it access to the private members
+	/// </summary>
+	friend class VertexBuffer;
 };
 
 #endif // !_GRAPHICS_ENGINE_H_

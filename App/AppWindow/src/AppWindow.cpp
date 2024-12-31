@@ -43,7 +43,18 @@
 #include "GraphicsEngine.hpp"
 #include "SwapChain.hpp"
 #include "DeviceContext.hpp"
+#include "VertexBuffer.hpp"
 #include <iostream>
+
+struct vec3
+{
+	float x, y, z;
+};
+
+struct vertex
+{
+	vec3 position;
+};
 
 AppWindow::AppWindow()
 {
@@ -59,6 +70,7 @@ void AppWindow::onCreate()
 {
 	GraphicsEngine::get()->init();
 	m_swap_chain_p = GraphicsEngine::get()->createSwapChain();
+
 	RECT rectClient = this->getClientWindowRect();
 	LONG rcWidth = rectClient.right - rectClient.left;
 	LONG rcHeight = rectClient.bottom - rectClient.top;
@@ -67,23 +79,42 @@ void AppWindow::onCreate()
 	{
 		std::cout << "Swap chain initialization failed" << std::endl;
 	}
+
+	vertex list[] = {
+		// X, Y, Z
+		{{-0.5f, -0.5f, 0.0f}}, // POS1
+		{{0.0f, 0.5f, 0.0f}},	// POS2
+		{{0.5f, -0.5f, 0.0f}}	// POS3
+	};
+
+	m_vertex_buffer_p = GraphicsEngine::get()->createVertexBuffer();
+
+	GraphicsEngine::get()->createShaders();
+	void* shader_byte_code = nullptr;
+	UINT size_shader = 0;
+	GraphicsEngine::get()->getShaderBufferAndSize(&shader_byte_code, &size_shader);
+	m_vertex_buffer_p->load(list, sizeof(vertex), ARRAYSIZE(list), shader_byte_code, size_shader, GraphicsEngine::get());
 }
 
 void AppWindow::onUpdate()
 {
 	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain_p,
-		1, 1, 0, 1);
+		0.2, 0, 0.4f, 1);
 
+	RECT rc = this->getClientWindowRect();
+	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
+	GraphicsEngine::get()->setShaders();
+	
+	GraphicsEngine::get()->getImmediateDeviceContext()->setvertexBuffer(m_vertex_buffer_p);
 
-
-
-
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleList(m_vertex_buffer_p->getSizeVertexList(), 0);
 	m_swap_chain_p->present(true);
 }
 
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
+	m_vertex_buffer_p->release();
 	if (m_swap_chain_p != nullptr) {
 		m_swap_chain_p->release();
 	}
