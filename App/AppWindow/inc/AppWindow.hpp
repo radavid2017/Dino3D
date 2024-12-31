@@ -45,7 +45,9 @@
 
 #include "Window.hpp"
 
+class GraphicsEngine;
 class SwapChain;
+class VertexBuffer;
 
 /**
  * @class AppWindow
@@ -121,6 +123,13 @@ private:
     /// This swap chain manages the presentation of rendered images.
     /// </summary>
     SwapChain* m_swap_chain_p;
+
+	/// <summary>
+	/// A pointer to the VertexBuffer instance associated with the AppWindow.
+	/// </summary>
+	VertexBuffer* m_vertex_buffer_p;
+
+	friend class GraphicsEngine;
 };
 
 #endif // _APP_WINDOW_H_

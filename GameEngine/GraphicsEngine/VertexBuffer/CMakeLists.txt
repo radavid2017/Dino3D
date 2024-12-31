@@ -12,12 +12,12 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(DeviceContext)
+project(VertexBuffer)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
-    "inc/DeviceContext.hpp"
-    "src/DeviceContext.cpp"
+    "inc/VertexBuffer.hpp"
+    "src/VertexBuffer.cpp"
 )
 
 # Setting path to headers
@@ -27,11 +27,9 @@ target_include_directories(${PROJECT_NAME}
         ../inc
 )
 
-# Link libraries
 target_link_libraries(${PROJECT_NAME}
-    d3d11.lib
-    SwapChain
-    VertexBuffer
+    PUBLIC
+        d3d11.lib
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly
