@@ -12,6 +12,7 @@ public:
     void clearRenderTargetColor(SwapChain* f_swapChain, float r, float g, float b, float alpha);
 	void setvertexBuffer(VertexBuffer* vertex_buffer);
 	void drawTriangleList(UINT vertex_count, UINT start_vertex_index);
+	void drawTriangleStrip(UINT vertex_count, UINT start_vertex_index);
 	void setViewportSize(UINT width, UINT height);
     bool release();
     ~DeviceContext();
