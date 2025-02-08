@@ -49,6 +49,7 @@ class GraphicsEngine;
 class SwapChain;
 class VertexBuffer;
 class VertexShader;
+class PixelShader;
 
 /**
  * @class AppWindow
@@ -134,6 +135,11 @@ private:
 	/// A pointer to the VertexShader instance associated with the AppWindow.
 	/// </summary>
 	VertexShader* m_vertex_shader_p;
+
+	/// <summary>
+	/// A pointer to the PixelShader instance associated with the AppWindow.
+	/// </summary>
+	PixelShader* m_pixel_shader_p;
 
 	friend class GraphicsEngine;
 };

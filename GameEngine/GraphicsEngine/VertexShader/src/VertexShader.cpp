@@ -1,6 +1,5 @@
 #include "VertexShader.hpp"
 #include "GraphicsEngine.hpp"
-#include <iostream>
 
 VertexShader::VertexShader()
 {
@@ -19,7 +18,6 @@ bool VertexShader::init(const void* f_shader_byte_code, size_t f_byte_code_size,
 {
 	if (!SUCCEEDED(f_graphicsEngine->getDevice()->CreateVertexShader(f_shader_byte_code, f_byte_code_size, nullptr, &m_vs)))
 	{
-		std::cout << "aici\n";
 		return false;
 	}
 	return true;

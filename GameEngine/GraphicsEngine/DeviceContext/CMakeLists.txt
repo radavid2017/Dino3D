@@ -33,6 +33,7 @@ target_link_libraries(${PROJECT_NAME}
     SwapChain
     VertexBuffer
     VertexShader
+    PixelShader
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

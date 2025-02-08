@@ -45,6 +45,7 @@
 #include "DeviceContext.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexShader.hpp"
+#include "PixelShader.hpp"
 #include <iostream>
 
 struct vec3
@@ -55,6 +56,7 @@ struct vec3
 struct vertex
 {
 	vec3 position;
+	vec3 color;
 };
 
 AppWindow::AppWindow()
@@ -83,23 +85,25 @@ void AppWindow::onCreate()
 
 	vertex list[] = {
 		// X, Y, Z
-		{{-0.5f, -0.5f, 0.0f}}, // POS1
-		{{-0.5f, 0.5f, 0.0f}},	// POS2
-		{{0.5f, -0.5f, 0.0f}},	// POS3
-		{{0.5f, 0.5f, 0.0f}},	// POS4
+		{-0.5f, -0.5f, 0.0f,	0,0,0},	// POS1, COLOR1
+		{-0.5f, 0.5f, 0.0f,		1,1,0},	// POS2, COLOR2
+		{0.5f, -0.5f, 0.0f,		0,0,1},	// POS3, COLOR3
+		{0.5f, 0.5f, 0.0f,		1,1,1},	// POS4, COLOR4
 	};
 
 	m_vertex_buffer_p = GraphicsEngine::get()->createVertexBuffer();
-
-	GraphicsEngine::get()->createShaders();
 
 	void* shader_byte_code = nullptr;
 	size_t shader_size = 0;
 	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &shader_size);
 	
-	m_vertex_shader_p = GraphicsEngine::get()->createVertexShader(shader_byte_code, shader_size, GraphicsEngine::get());
+	m_vertex_shader_p = GraphicsEngine::get()->createVertexShader(shader_byte_code, shader_size);
 	m_vertex_buffer_p->load(list, sizeof(vertex), ARRAYSIZE(list), shader_byte_code, shader_size, GraphicsEngine::get());
 
+	GraphicsEngine::get()->releaseCompiledShader();
+
+	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &shader_size);
+	m_pixel_shader_p = GraphicsEngine::get()->createPixelShader(shader_byte_code, shader_size);
 	GraphicsEngine::get()->releaseCompiledShader();
 }
 
@@ -110,8 +114,10 @@ void AppWindow::onUpdate()
 
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
-	GraphicsEngine::get()->setShaders();
+	
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vertex_shader_p);
+
+	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_pixel_shader_p);
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->setvertexBuffer(m_vertex_buffer_p);
 
@@ -123,8 +129,8 @@ void AppWindow::onDestroy()
 {
 	Window::onDestroy();
 	m_vertex_buffer_p->release();
-	if (m_swap_chain_p != nullptr) {
-		m_swap_chain_p->release();
-	}
+	m_swap_chain_p->release();
+	m_vertex_shader_p->release();
+	m_pixel_shader_p->release();
 	GraphicsEngine::get()->release();
 }
