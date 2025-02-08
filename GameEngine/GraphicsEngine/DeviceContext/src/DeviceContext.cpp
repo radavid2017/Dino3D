@@ -2,6 +2,7 @@
 #include "SwapChain.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexShader.hpp"
+#include "PixelShader.hpp"
 #include <d3d11.h>
 #include <iostream>
 
@@ -57,6 +58,11 @@ void DeviceContext::setViewportSize(UINT width, UINT height)
 void DeviceContext::setVertexShader(VertexShader* f_vertex_shader)
 {
 	m_deviceContext_p->VSSetShader(f_vertex_shader->m_vs, nullptr, 0);
+}
+
+void DeviceContext::setPixelShader(PixelShader* f_pixel_shader)
+{
+	m_deviceContext_p->PSSetShader(f_pixel_shader->m_ps, nullptr, 0);
 }
 
 bool DeviceContext::release()

@@ -49,6 +49,7 @@ class SwapChain;
 class DeviceContext;
 class VertexBuffer;
 class VertexShader;
+class PixelShader;
 
 /**
  * @class GraphicsEngine
@@ -172,7 +173,16 @@ public:
 	/// <param name="f_shader_byte_code"></param>
 	/// <param name="f_byte_code_size"></param>
 	/// <returns></returns>
-	VertexShader* createVertexShader(const void* f_shader_byte_code, size_t f_byte_code_size, IGraphicsEngine* f_graphicsEngine);
+	VertexShader* createVertexShader(const void* f_shader_byte_code, size_t f_byte_code_size);
+
+	/// <summary>
+	/// Creates a PixelShader instance associated with the GraphicsEngine.
+	/// </summary>
+	/// <param name="f_shader_byte_code"></param>
+	/// <param name="f_byte_code_size"></param>
+	/// <param name="f_graphicsEngine"></param>
+	/// <returns></returns>
+	PixelShader* createPixelShader(const void* f_shader_byte_code, size_t f_byte_code_size);
 
 	/// <summary>
 	/// Compiles a vertex shader from a file.
@@ -183,28 +193,23 @@ public:
 	/// <param name="f_byte_code_size"></param>
 	/// <returns></returns>
 	bool compileVertexShader(const wchar_t* f_file_name, const char* f_entry_point_name,
-                                    void** f_shader_byte_code, size_t* f_byte_code_size);
+        void** f_shader_byte_code, size_t* f_byte_code_size);
+
+	/// <summary>
+	/// Compiles a pixel shader from a file.
+	/// </summary>
+	/// <param name="f_file_name"></param>
+	/// <param name="f_entry_point_name"></param>
+	/// <param name="f_shader_byte_code"></param>
+	/// <param name="f_byte_code_size"></param>
+	/// <returns></returns>
+	bool compilePixelShader(const wchar_t* f_file_name, const char* f_entry_point_name,
+		void** f_shader_byte_code, size_t* f_byte_code_size);
 
 	/// <summary>
 	/// Releases the compiled shader.
 	/// </summary>
 	void releaseCompiledShader();
-
-    /*--------------------------------------------------------------
-        Default simple shaders
-    --------------------------------------------------------------*/
-
-	/// <summary>
-	/// Creates the shaders for the GraphicsEngine.
-	/// </summary>
-	/// <returns></returns>
-	bool createShaders();
-
-	/// <summary>
-	/// Sets the shaders for the GraphicsEngine.
-	/// </summary>
-	/// <returns></returns>
-	bool setShaders();
 
     /// <summary>
     /// Retrieves the DirectX 11 device associated with the GraphicsEngine.
@@ -310,6 +315,11 @@ private:
 	/// Declares VertexShader as a friend class, allowing it access to the private members
 	/// </summary>
 	friend class VertexShader;
+
+	/// <summary>
+	/// Declares PixelShader as a friend class, allowing it access to the private members
+	/// </summary>
+	friend class PixelShader;
 };
 
 #endif // !_GRAPHICS_ENGINE_H_
