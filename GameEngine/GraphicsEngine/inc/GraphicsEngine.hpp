@@ -48,6 +48,7 @@
 class SwapChain;
 class DeviceContext;
 class VertexBuffer;
+class VertexShader;
 
 /**
  * @class GraphicsEngine
@@ -166,6 +167,34 @@ public:
 	VertexBuffer* createVertexBuffer();
 
 	/// <summary>
+	/// Creates a VertexShader instance associated with the GraphicsEngine.
+	/// </summary>
+	/// <param name="f_shader_byte_code"></param>
+	/// <param name="f_byte_code_size"></param>
+	/// <returns></returns>
+	VertexShader* createVertexShader(const void* f_shader_byte_code, size_t f_byte_code_size, IGraphicsEngine* f_graphicsEngine);
+
+	/// <summary>
+	/// Compiles a vertex shader from a file.
+	/// </summary>
+	/// <param name="f_file_name"></param>
+	/// <param name="f_entry_point_name"></param>
+	/// <param name="f_shader_byte_code"></param>
+	/// <param name="f_byte_code_size"></param>
+	/// <returns></returns>
+	bool compileVertexShader(const wchar_t* f_file_name, const char* f_entry_point_name,
+                                    void** f_shader_byte_code, size_t* f_byte_code_size);
+
+	/// <summary>
+	/// Releases the compiled shader.
+	/// </summary>
+	void releaseCompiledShader();
+
+    /*--------------------------------------------------------------
+        Default simple shaders
+    --------------------------------------------------------------*/
+
+	/// <summary>
 	/// Creates the shaders for the GraphicsEngine.
 	/// </summary>
 	/// <returns></returns>
@@ -176,13 +205,6 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	bool setShaders();
-
-	/// <summary>
-	/// Sets the input layout for the GraphicsEngine.
-	/// </summary>
-	/// <param name="bytecode"></param>
-	/// <param name="size"></param>
-	void getShaderBufferAndSize(void** bytecode, UINT* size);
 
     /// <summary>
     /// Retrieves the DirectX 11 device associated with the GraphicsEngine.
@@ -241,6 +263,11 @@ private:
     /// This factory is responsible for creating DXGI objects such as swap chains and adapters.
     /// </summary>
     IDXGIFactory* m_dxgi_factory_p;
+    
+	/// <summary>
+	/// A pointer to the shader blob.
+	/// </summary>
+	ID3DBlob* m_blob = nullptr;
 
     /// <summary>
 	/// A pointer to the vertex shader blob.
@@ -278,6 +305,11 @@ private:
 	/// Declares VertexBuffer as a friend class, allowing it access to the private members
 	/// </summary>
 	friend class VertexBuffer;
+
+	/// <summary>
+	/// Declares VertexShader as a friend class, allowing it access to the private members
+	/// </summary>
+	friend class VertexShader;
 };
 
 #endif // !_GRAPHICS_ENGINE_H_

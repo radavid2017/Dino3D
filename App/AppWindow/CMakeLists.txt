@@ -32,6 +32,7 @@ target_link_libraries(${PROJECT_NAME}
         GraphicsEngine
         SwapChain
         VertexBuffer
+        VertexShader
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly
