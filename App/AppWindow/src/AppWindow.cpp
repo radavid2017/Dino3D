@@ -44,6 +44,7 @@
 #include "SwapChain.hpp"
 #include "DeviceContext.hpp"
 #include "VertexBuffer.hpp"
+#include "VertexShader.hpp"
 #include <iostream>
 
 struct vec3
@@ -91,10 +92,15 @@ void AppWindow::onCreate()
 	m_vertex_buffer_p = GraphicsEngine::get()->createVertexBuffer();
 
 	GraphicsEngine::get()->createShaders();
+
 	void* shader_byte_code = nullptr;
-	UINT size_shader = 0;
-	GraphicsEngine::get()->getShaderBufferAndSize(&shader_byte_code, &size_shader);
-	m_vertex_buffer_p->load(list, sizeof(vertex), ARRAYSIZE(list), shader_byte_code, size_shader, GraphicsEngine::get());
+	size_t shader_size = 0;
+	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &shader_size);
+	
+	m_vertex_shader_p = GraphicsEngine::get()->createVertexShader(shader_byte_code, shader_size, GraphicsEngine::get());
+	m_vertex_buffer_p->load(list, sizeof(vertex), ARRAYSIZE(list), shader_byte_code, shader_size, GraphicsEngine::get());
+
+	GraphicsEngine::get()->releaseCompiledShader();
 }
 
 void AppWindow::onUpdate()
@@ -105,7 +111,8 @@ void AppWindow::onUpdate()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 	GraphicsEngine::get()->setShaders();
-	
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vertex_shader_p);
+
 	GraphicsEngine::get()->getImmediateDeviceContext()->setvertexBuffer(m_vertex_buffer_p);
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vertex_buffer_p->getSizeVertexList(), 0);
