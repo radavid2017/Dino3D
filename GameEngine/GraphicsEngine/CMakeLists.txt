@@ -30,6 +30,7 @@ target_include_directories(${PROJECT_NAME}
         VertexBuffer/inc
         VertexShader/inc
         PixelShader/inc
+        ConstantBuffer/inc
 )
 
 # Link libraries
@@ -41,6 +42,7 @@ target_link_libraries(${PROJECT_NAME}
     VertexBuffer
     VertexShader
     PixelShader
+    ConstantBuffer
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

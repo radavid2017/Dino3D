@@ -3,6 +3,7 @@
 #include "VertexBuffer.hpp"
 #include "VertexShader.hpp"
 #include "PixelShader.hpp"
+#include "ConstantBuffer.hpp"
 #include <d3d11.h>
 #include <iostream>
 
@@ -63,6 +64,16 @@ void DeviceContext::setVertexShader(VertexShader* f_vertex_shader)
 void DeviceContext::setPixelShader(PixelShader* f_pixel_shader)
 {
 	m_deviceContext_p->PSSetShader(f_pixel_shader->m_ps, nullptr, 0);
+}
+
+void DeviceContext::setConstantBuffer(VertexShader* f_vertex_shader, ConstantBuffer* f_constant_buffer)
+{
+	m_deviceContext_p->VSSetConstantBuffers(0, 1, &f_constant_buffer->m_buffer);
+}
+
+void DeviceContext::setConstantBuffer(PixelShader* f_pixel_shader, ConstantBuffer* f_constant_buffer)
+{
+	m_deviceContext_p->PSSetConstantBuffers(0, 1, &f_constant_buffer->m_buffer);
 }
 
 bool DeviceContext::release()

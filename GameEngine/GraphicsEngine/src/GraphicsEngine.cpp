@@ -45,6 +45,7 @@
 #include "VertexShader.hpp"
 #include "PixelShader.hpp"
 #include "DeviceContext.hpp"
+#include "ConstantBuffer.hpp"
 #include <d3dcompiler.h>
 
 SwapChain* GraphicsEngine::createSwapChain()
@@ -60,6 +61,11 @@ DeviceContext* GraphicsEngine::getImmediateDeviceContext()
 VertexBuffer* GraphicsEngine::createVertexBuffer()
 {
     return new VertexBuffer();
+}
+
+ConstantBuffer* GraphicsEngine::createConstantBuffer()
+{
+	return new ConstantBuffer();
 }
 
 VertexShader* GraphicsEngine::createVertexShader(const void* f_shader_byte_code, size_t f_byte_code_size)

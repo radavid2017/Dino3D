@@ -50,6 +50,7 @@ class SwapChain;
 class VertexBuffer;
 class VertexShader;
 class PixelShader;
+class ConstantBuffer;
 
 /**
  * @class AppWindow
@@ -141,6 +142,21 @@ private:
 	/// </summary>
 	PixelShader* m_pixel_shader_p;
 
+	/// <summary>
+	/// A pointer to the ConstantBuffer instance associated with the AppWindow.
+	/// </summary>
+	ConstantBuffer* m_constant_buffer_p;
+	
+    /*--------------------------------------------------------------
+		Friends
+	--------------------------------------------------------------*/
+	
+    /// <summary>
+	/// Declares GraphicsEngine as a friend class, allowing it access to the private members
+	/// of AppWindow. This is necessary because the GraphicsEngine class needs direct
+	/// access to certain low-level DirectX objects managed by AppWindow, such as
+	/// the swap chain, to function properly.
+	/// </summary>
 	friend class GraphicsEngine;
 };
 
