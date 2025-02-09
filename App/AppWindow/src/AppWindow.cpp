@@ -46,6 +46,7 @@
 #include "VertexBuffer.hpp"
 #include "VertexShader.hpp"
 #include "PixelShader.hpp"
+#include "ConstantBuffer.hpp"
 #include <iostream>
 
 struct vec3
@@ -56,7 +57,15 @@ struct vec3
 struct vertex
 {
 	vec3 position;
+	vec3 position1;
 	vec3 color;
+	vec3 color1;
+};
+
+__declspec(align(16))
+struct constant
+{
+	unsigned int m_time;
 };
 
 AppWindow::AppWindow()
@@ -85,10 +94,10 @@ void AppWindow::onCreate()
 
 	vertex list[] = {
 		// X, Y, Z
-		{-0.5f, -0.5f, 0.0f,	0,0,0},	// POS1, COLOR1
-		{-0.5f, 0.5f, 0.0f,		1,1,0},	// POS2, COLOR2
-		{0.5f, -0.5f, 0.0f,		0,0,1},	// POS3, COLOR3
-		{0.5f, 0.5f, 0.0f,		1,1,1},	// POS4, COLOR4
+		{-0.5f, -0.5f, 0.0f,	-0.32f, -0.11f, 0.0f,		0,0,0,	0,1,0	},	// POS1[0], POS1[1], COLOR1[0], COLOR2[1]
+		{-0.5f, 0.5f, 0.0f,		-0.11f, 0.78f, 0.0f,		1,1,0,	0,1,1	},	// POS2[0], POS2[1], COLOR2[0], COLOR2[1]
+		{0.5f, -0.5f, 0.0f,		0.75f, -0.73f, 0.0f,		0,0,1,	1,0,0	},	// POS3[0], POS3[1], COLOR3[0], COLOR3[1]
+		{0.5f, 0.5f, 0.0f,		0.88f, 0.77f, 0.0f,			1,1,1,	0,0,1	},	// POS4[0], POS4[1], COLOR4[0], COLOR4[1]
 	};
 
 	m_vertex_buffer_p = GraphicsEngine::get()->createVertexBuffer();
@@ -105,6 +114,12 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &shader_size);
 	m_pixel_shader_p = GraphicsEngine::get()->createPixelShader(shader_byte_code, shader_size);
 	GraphicsEngine::get()->releaseCompiledShader();
+
+	constant cc;
+	cc.m_time = 0;
+
+	m_constant_buffer_p = GraphicsEngine::get()->createConstantBuffer();
+	m_constant_buffer_p->load(&cc, sizeof(constant), GraphicsEngine::get());
 }
 
 void AppWindow::onUpdate()
@@ -115,6 +130,13 @@ void AppWindow::onUpdate()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 	
+	constant cc;
+	cc.m_time = ::GetTickCount();
+	m_constant_buffer_p->update(GraphicsEngine::get()->getImmediateDeviceContext(), &cc);
+
+	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_vertex_shader_p, m_constant_buffer_p);
+	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_pixel_shader_p, m_constant_buffer_p);
+
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vertex_shader_p);
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_pixel_shader_p);

@@ -50,6 +50,7 @@ class DeviceContext;
 class VertexBuffer;
 class VertexShader;
 class PixelShader;
+class ConstantBuffer;
 
 /**
  * @class GraphicsEngine
@@ -166,6 +167,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	VertexBuffer* createVertexBuffer();
+
+	/// <summary>
+	/// Creates a ConstantBuffer instance associated with the GraphicsEngine.
+	/// </summary>
+	/// <returns></returns>
+	ConstantBuffer* createConstantBuffer();
 
 	/// <summary>
 	/// Creates a VertexShader instance associated with the GraphicsEngine.
@@ -320,6 +327,11 @@ private:
 	/// Declares PixelShader as a friend class, allowing it access to the private members
 	/// </summary>
 	friend class PixelShader;
+
+	/// <summary>
+	/// Declares ConstantBuffer as a friend class, allowing it access to the private members
+	/// </summary>
+	friend class ConstantBuffer;
 };
 
 #endif // !_GRAPHICS_ENGINE_H_

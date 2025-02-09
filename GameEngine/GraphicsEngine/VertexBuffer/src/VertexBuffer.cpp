@@ -1,8 +1,7 @@
 #include "VertexBuffer.hpp"
 #include "GraphicsEngine.hpp"
-#include <iostream>
 
-VertexBuffer::VertexBuffer() : m_layout(0), m_buffer(0)
+VertexBuffer::VertexBuffer() : m_layout(0), m_buffer(0), m_size_vertex(0), m_size_list(0)
 {
 }
 
@@ -26,7 +25,6 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 
 	if (FAILED(graphics_engine->getDevice()->CreateBuffer(&buff_desc, &init_data, &m_buffer)))
 	{
-		std::cout << "Error creating vertex buffer" << std::endl;
 		return false;
 	}
 
@@ -34,14 +32,15 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 	{
 		//SEMANTIC NAME - SEMANTIC INDEX - FORMAT - INPUT SLOT - ALIGNED BYTE OFFSET - INPUT SLOT CLASS - INSTANCE DATA STEP RATE
 		{"POSITION", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,D3D11_INPUT_PER_VERTEX_DATA ,0},
-		{ "COLOR", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,D3D11_INPUT_PER_VERTEX_DATA ,0 }
+		{"POSITION", 1,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,D3D11_INPUT_PER_VERTEX_DATA ,0},
+		{ "COLOR", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 24,D3D11_INPUT_PER_VERTEX_DATA ,0 },
+		{ "COLOR", 1,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 36,D3D11_INPUT_PER_VERTEX_DATA ,0 }
 	};
 
 	UINT size_layout = ARRAYSIZE(layout);
 
 	if (FAILED(graphics_engine->getDevice()->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader, &m_layout)))
 	{
-		std::cout << "Error creating input layout" << std::endl;
 		return false;
 	}
 

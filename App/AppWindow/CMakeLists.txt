@@ -34,6 +34,7 @@ target_link_libraries(${PROJECT_NAME}
         VertexBuffer
         VertexShader
         PixelShader
+        ConstantBuffer
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly
