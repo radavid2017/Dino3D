@@ -87,6 +87,12 @@ public:
     /// </summary>
     AppWindow();
 
+    /*--------------------------------------------------------------
+		Public Methods
+    --------------------------------------------------------------*/
+
+	void updateQuadPosition();
+
     /// <summary>
     /// Destructor for the AppWindow class.
     /// Ensures that all resources are cleaned up correctly when the window is closed.
@@ -147,6 +153,13 @@ private:
 	/// </summary>
 	ConstantBuffer* m_constant_buffer_p;
 	
+	long m_old_delta;
+	long m_new_delta;
+	float m_delta_time;
+
+    float m_delta_pos;
+	float m_delta_scale;
+
     /*--------------------------------------------------------------
 		Friends
 	--------------------------------------------------------------*/
