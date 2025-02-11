@@ -1,7 +1,7 @@
 #=============================================================================
 #  C O P Y R I G H T
 #-----------------------------------------------------------------------------
-#  Copyright (c) 2024 by Hoka David-Stelian. All rights reserved.
+#  Copyright (c) 2025 by Hoka David-Stelian. All rights reserved.
 #
 #  This file is property of Hoka David-Stelian. Any unauthorized copy, use or
 #  distribution is an offensive act against international law and may be 
@@ -12,12 +12,12 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(AppWindow)
+project(Vector3D)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
-    "inc/AppWindow.hpp"
-    "src/AppWindow.cpp"
+    "inc/Vector3D.hpp"
+    "src/Vector3D.cpp"
 )
 
 # Setting path to headers
@@ -28,15 +28,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        WindowingSystem
-        GraphicsEngine
-        SwapChain
-        VertexBuffer
-        VertexShader
-        PixelShader
-        ConstantBuffer
-        Vector3D
-        Matrix4x4
+        d3d11.lib
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

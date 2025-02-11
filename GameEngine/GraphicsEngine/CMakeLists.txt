@@ -11,8 +11,11 @@
 
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
+set(PARENT_PROJECT ${PROJECT_NAME})
 # Project name
 project(GraphicsEngine)
+
+set(SOLUTION_DIR "${PARENT_PROJECT}/${PROJECT_NAME}")
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
