@@ -42,6 +42,7 @@
 #include "GraphicsEngine.hpp"
 #include "SwapChain.hpp"
 #include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
 #include "VertexShader.hpp"
 #include "PixelShader.hpp"
 #include "DeviceContext.hpp"
@@ -61,6 +62,11 @@ DeviceContext* GraphicsEngine::getImmediateDeviceContext()
 VertexBuffer* GraphicsEngine::createVertexBuffer()
 {
     return new VertexBuffer();
+}
+
+IndexBuffer* GraphicsEngine::createIndexBuffer()
+{
+	return new IndexBuffer();
 }
 
 ConstantBuffer* GraphicsEngine::createConstantBuffer()

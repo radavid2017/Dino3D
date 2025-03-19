@@ -32,6 +32,7 @@ target_link_libraries(${PROJECT_NAME}
         GraphicsEngine
         SwapChain
         VertexBuffer
+        IndexBuffer
         VertexShader
         PixelShader
         ConstantBuffer

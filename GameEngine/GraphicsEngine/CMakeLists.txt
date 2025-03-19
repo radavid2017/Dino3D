@@ -31,6 +31,7 @@ target_include_directories(${PROJECT_NAME}
         SwapChain/inc
         DeviceContext/inc
         VertexBuffer/inc
+        IndexBuffer/inc
         VertexShader/inc
         PixelShader/inc
         ConstantBuffer/inc
@@ -46,6 +47,7 @@ target_link_libraries(${PROJECT_NAME}
     VertexShader
     PixelShader
     ConstantBuffer
+    IndexBuffer
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

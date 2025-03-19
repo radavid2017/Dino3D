@@ -8,14 +8,18 @@ class VertexBuffer;
 class VertexShader;
 class PixelShader;
 class ConstantBuffer;
+class IndexBuffer;
 
 class DeviceContext : public IDeviceContext
 {
 public:
     DeviceContext(ID3D11DeviceContext* f_deviceContext);
     void clearRenderTargetColor(SwapChain* f_swapChain, float r, float g, float b, float alpha);
-	void setvertexBuffer(VertexBuffer* vertex_buffer);
+	void setVertexBuffer(VertexBuffer* vertex_buffer);
+	void setIndexBuffer(IndexBuffer* index_buffer);
+	
 	void drawTriangleList(UINT vertex_count, UINT start_vertex_index);
+	void drawIndexedTriangleList(UINT index_count, UINT start_vertex_index, UINT start_index_location);
 	void drawTriangleStrip(UINT vertex_count, UINT start_vertex_index);
 	
     void setViewportSize(UINT width, UINT height);

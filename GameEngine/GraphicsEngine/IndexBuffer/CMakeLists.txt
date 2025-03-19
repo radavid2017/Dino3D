@@ -12,13 +12,12 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(DeviceContext)
+project(IndexBuffer)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
-    "inc/DeviceContext.hpp"
-	"inc/IDeviceContext.hpp"
-    "src/DeviceContext.cpp"
+    "inc/IndexBuffer.hpp"
+    "src/IndexBuffer.cpp"
 )
 
 # Setting path to headers
@@ -28,15 +27,9 @@ target_include_directories(${PROJECT_NAME}
         ../inc
 )
 
-# Link libraries
 target_link_libraries(${PROJECT_NAME}
-    d3d11.lib
-    SwapChain
-    VertexBuffer
-    IndexBuffer
-    VertexShader
-    PixelShader
-    ConstantBuffer
+    PUBLIC
+        d3d11.lib
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

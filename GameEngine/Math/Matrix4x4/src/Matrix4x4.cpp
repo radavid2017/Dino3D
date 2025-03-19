@@ -27,6 +27,30 @@ void Matrix4x4::setScale(const Vector3D& f_scale)
 	mat[2][2] = f_scale.z;
 }
 
+void Matrix4x4::setRotationX(float f_x)
+{
+	mat[1][1] = cos(f_x);
+	mat[1][2] = sin(f_x);
+	mat[2][1] = -sin(f_x);
+	mat[2][2] = cos(f_x);
+}
+
+void Matrix4x4::setRotationY(float f_y)
+{
+	mat[0][0] = cos(f_y);
+	mat[0][2] = -sin(f_y);
+	mat[2][0] = sin(f_y);
+	mat[2][2] = cos(f_y);
+}
+
+void Matrix4x4::setRotationZ(float f_z)
+{
+	mat[0][0] = cos(f_z);
+	mat[0][1] = sin(f_z);
+	mat[1][0] = -sin(f_z);
+	mat[1][1] = cos(f_z);
+}
+
 void Matrix4x4::operator*=(const Matrix4x4& rhs)
 {
 	Matrix4x4 out;
