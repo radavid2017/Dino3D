@@ -48,6 +48,7 @@
 class SwapChain;
 class DeviceContext;
 class VertexBuffer;
+class IndexBuffer;
 class VertexShader;
 class PixelShader;
 class ConstantBuffer;
@@ -167,6 +168,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	VertexBuffer* createVertexBuffer();
+
+	/// <summary>
+	/// Creates an IndexBuffer instance associated with the GraphicsEngine.
+	/// </summary>
+	/// <returns></returns>
+	IndexBuffer* createIndexBuffer();
 
 	/// <summary>
 	/// Creates a ConstantBuffer instance associated with the GraphicsEngine.
@@ -317,6 +324,11 @@ private:
 	/// Declares VertexBuffer as a friend class, allowing it access to the private members
 	/// </summary>
 	friend class VertexBuffer;
+
+    /// <summary>
+    /// Declares IndexBuffer as a friend class, allowing it access to the private members
+    /// </summary>
+    friend class IndexBuffer;
 
 	/// <summary>
 	/// Declares VertexShader as a friend class, allowing it access to the private members

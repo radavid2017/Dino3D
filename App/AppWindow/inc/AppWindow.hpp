@@ -48,6 +48,7 @@
 class GraphicsEngine;
 class SwapChain;
 class VertexBuffer;
+class IndexBuffer;
 class VertexShader;
 class PixelShader;
 class ConstantBuffer;
@@ -137,6 +138,11 @@ private:
 	/// A pointer to the VertexBuffer instance associated with the AppWindow.
 	/// </summary>
 	VertexBuffer* m_vertex_buffer_p;
+
+	/// <summary>
+	/// A pointer to the IndexBuffer instance associated with the AppWindow.
+	/// </summary>
+	IndexBuffer* m_index_buffer_p;
 
 	/// <summary>
 	/// A pointer to the VertexShader instance associated with the AppWindow.

@@ -44,6 +44,7 @@
 #include "SwapChain.hpp"
 #include "DeviceContext.hpp"
 #include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
 #include "VertexShader.hpp"
 #include "PixelShader.hpp"
 #include "ConstantBuffer.hpp"
@@ -54,7 +55,6 @@
 struct vertex
 {
 	Vector3D position;
-	Vector3D position1;
 	Vector3D color;
 	Vector3D color1;
 };
@@ -91,19 +91,33 @@ void AppWindow::updateQuadPosition()
 
 	//cc.m_world.setTranslation(Vector3D::lerp(Vector3D(-1.5f,-1.5f,0), Vector3D(1.5f,1.5f,0), m_delta_pos));
 	
-	m_delta_scale += m_delta_time / 0.15f;
+	m_delta_scale += m_delta_time / 0.55f;
 
-	cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5f,0.5f,0), Vector3D(1.0f, 1.0f,0), (sin(m_delta_scale)+1.0f)/2.0f));
+	//cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5f,0.5f,0), Vector3D(1.0f, 1.0f,0), (sin(m_delta_scale)+1.0f)/2.0f));
 
-	temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f, 1.5f, 0), m_delta_pos));
+	//temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f, 1.5f, 0), m_delta_pos));
 
+	//cc.m_world *= temp;
+
+	cc.m_world.setScale(Vector3D(1, 1, 1));
+
+	temp.setIdentity();
+	temp.setRotationX(m_delta_scale);
+	cc.m_world *= temp;
+
+	temp.setIdentity();
+	temp.setRotationY(m_delta_scale);
+	cc.m_world *= temp;
+
+	temp.setIdentity();
+	temp.setRotationZ(m_delta_scale);
 	cc.m_world *= temp;
 
 	cc.m_view.setIdentity();
 	cc.m_proj.setOrthoLH
 	(
-		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 400.0f,
-		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 400.0f,
+		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 300.0f,
+		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 300.0f,
 		-4.0f,
 		4.0f
 	);
@@ -130,22 +144,55 @@ void AppWindow::onCreate()
 		std::cout << "Swap chain initialization failed" << std::endl;
 	}
 
-	vertex list[] = {
-		// X, Y, Z
-		{Vector3D(-0.5f, -0.5f, 0.0f),		Vector3D(-0.32f, -0.11f, 0.0f),		Vector3D(0,0,0),	Vector3D(0,1,0)},	// POS1[0], POS1[1], COLOR1[0], COLOR2[1]
-		{Vector3D(-0.5f, 0.5f, 0.0f),		Vector3D(-0.11f, 0.78f, 0.0f),		Vector3D(1,1,0),	Vector3D(0,1,1)	},	// POS2[0], POS2[1], COLOR2[0], COLOR2[1]
-		{Vector3D(0.5f, -0.5f, 0.0f),		Vector3D(0.75f, -0.73f, 0.0f),		Vector3D(0,0,1),	Vector3D(1,0,0)	},	// POS3[0], POS3[1], COLOR3[0], COLOR3[1]
-		{Vector3D(0.5f, 0.5f, 0.0f),		Vector3D(0.88f, 0.77f, 0.0f),		Vector3D(1,1,1),	Vector3D(0,0,1)	},	// POS4[0], POS4[1], COLOR4[0], COLOR4[1]
+	vertex vertex_list[] =
+	{
+		//X - Y - Z
+		//FRONT FACE
+		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
+		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+
+		//BACK FACE
+		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
 	};
 
 	m_vertex_buffer_p = GraphicsEngine::get()->createVertexBuffer();
+
+	unsigned int index_list[] = 
+	{
+		// FRONT SIDE
+		0, 1, 2, // first triangle
+		2, 3, 0, // second triangle
+		// BACK SIDE
+		4, 5, 6,
+		6, 7, 4,
+		// TOP SIDE
+		1, 6, 5,
+		5, 2, 1,
+		// BOTTOM SIDE
+		7, 0, 3,
+		3, 4, 7,
+		// RIGHT SIDE
+		3, 2, 5,
+		5, 4, 3,
+		// LEFT SIDE
+		7, 6, 1,
+		1, 0, 7
+	};
+
+	m_index_buffer_p = GraphicsEngine::get()->createIndexBuffer();
+	m_index_buffer_p->load(index_list, ARRAYSIZE(index_list), GraphicsEngine::get());
 
 	void* shader_byte_code = nullptr;
 	size_t shader_size = 0;
 	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &shader_size);
 	
 	m_vertex_shader_p = GraphicsEngine::get()->createVertexShader(shader_byte_code, shader_size);
-	m_vertex_buffer_p->load(list, sizeof(vertex), ARRAYSIZE(list), shader_byte_code, shader_size, GraphicsEngine::get());
+	m_vertex_buffer_p->load(vertex_list, sizeof(vertex), ARRAYSIZE(vertex_list), shader_byte_code, shader_size, GraphicsEngine::get());
 
 	GraphicsEngine::get()->releaseCompiledShader();
 
@@ -177,9 +224,13 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_pixel_shader_p);
 
-	GraphicsEngine::get()->getImmediateDeviceContext()->setvertexBuffer(m_vertex_buffer_p);
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vertex_buffer_p);
+	
+	GraphicsEngine::get()->getImmediateDeviceContext()->setIndexBuffer(m_index_buffer_p);
 
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vertex_buffer_p->getSizeVertexList(), 0);
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawIndexedTriangleList(m_index_buffer_p->getSizeIndexList(), 0, 0);
+
+	//GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vertex_buffer_p->getSizeVertexList(), 0);
 	m_swap_chain_p->present(true);
 
 	m_old_delta = m_new_delta;
@@ -191,6 +242,8 @@ void AppWindow::onDestroy()
 {
 	Window::onDestroy();
 	m_vertex_buffer_p->release();
+	m_index_buffer_p->release();
+	m_constant_buffer_p->release();
 	m_swap_chain_p->release();
 	m_vertex_shader_p->release();
 	m_pixel_shader_p->release();
