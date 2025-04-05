@@ -12,33 +12,19 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(AppWindow)
+project(InputSystem)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
-    "inc/AppWindow.hpp"
-    "src/AppWindow.cpp"
+    "inc/InputListener.hpp"
+    "inc/InputSystem.hpp"
+    "src/InputSystem.cpp"
 )
 
 # Setting path to headers
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         inc
-)
-
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-        WindowingSystem
-        GraphicsEngine
-        SwapChain
-        VertexBuffer
-        IndexBuffer
-        VertexShader
-        PixelShader
-        ConstantBuffer
-        Vector3D
-        Matrix4x4
-        InputSystem
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

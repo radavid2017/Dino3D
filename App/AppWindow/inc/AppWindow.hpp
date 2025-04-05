@@ -44,6 +44,7 @@
 #define _APP_WINDOW_H_
 
 #include "Window.hpp"
+#include "InputListener.hpp"
 
 class GraphicsEngine;
 class SwapChain;
@@ -52,6 +53,7 @@ class IndexBuffer;
 class VertexShader;
 class PixelShader;
 class ConstantBuffer;
+class InputSystem;
 
 /**
  * @class AppWindow
@@ -75,7 +77,7 @@ class ConstantBuffer;
  * app.close();
  * @endcode
  */
-class AppWindow : public Window
+class AppWindow : public Window, public InputListener
 {
 public:
 
@@ -122,6 +124,10 @@ public:
     /// </summary>
     virtual void onDestroy() override;
 
+    // Inherited via InputListener
+    void onKeyDown(int key) override;
+    void onKeyUp(int key) override;
+
 private:
 
     /*--------------------------------------------------------------
@@ -165,6 +171,9 @@ private:
 
     float m_delta_pos;
 	float m_delta_scale;
+
+    float m_rot_x = 0.0f;
+    float m_rot_y = 0.0f;
 
     /*--------------------------------------------------------------
 		Friends
