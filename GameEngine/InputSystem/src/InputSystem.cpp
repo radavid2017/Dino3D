@@ -38,10 +38,35 @@
 
 #include "InputSystem.hpp"
 #include "InputListener.hpp"
+#include "Point.hpp"
 #include <Windows.h>
 
 void InputSystem::update()
 {
+	POINT l_currentMousePos = {};
+	::GetCursorPos(&l_currentMousePos);
+	m_currentMousePos = Point(l_currentMousePos.x, l_currentMousePos.y);
+
+	// First time initialization
+	if(m_firstTime)
+	{
+		m_oldMousePos = m_currentMousePos;
+		m_firstTime = false;
+	}
+
+	if (m_currentMousePos.x != m_oldMousePos.x || m_currentMousePos.y != m_oldMousePos.y)
+	{
+		for (auto& it = m_listeners.begin(); it != m_listeners.end(); ++it)
+		{
+			(*it)->onMouseMove(Point(
+				m_currentMousePos.x - m_oldMousePos.x,
+				m_currentMousePos.y - m_oldMousePos.y
+			));
+		}
+		// Store the old position
+		m_oldMousePos = m_currentMousePos;
+	}
+
 	if (::GetKeyboardState(m_keysState))
 	{
 		for (unsigned int i = 0; i < 256; ++i)
@@ -50,14 +75,36 @@ void InputSystem::update()
 			{
 				for (auto& it = m_listeners.begin() ; it != m_listeners.end(); ++it)
 				{
-					(*it)->onKeyDown(i);
+					if (i == VK_LBUTTON && m_keysState[i] != m_oldKeyState[i]) // Left mouse button is down
+					{
+						(*it)->onLeftMouseDown(m_currentMousePos);
+					}
+					else if (i == VK_RBUTTON && m_keysState[i] != m_oldKeyState[i]) // Right mouse button is down
+					{
+						(*it)->onRightMouseDown(m_currentMousePos);
+					}
+					else // Key is down
+					{
+						(*it)->onKeyDown(i);
+					}
 				}
 			}
 			else if(m_keysState[i] != m_oldKeyState[i]) // Key is up
 			{
 				for (auto& it = m_listeners.begin(); it != m_listeners.end(); ++it)
 				{
-					(*it)->onKeyUp(i);
+					if (i == VK_LBUTTON) // Left mouse button is up
+					{
+						(*it)->onLeftMouseUp(m_currentMousePos);
+					}
+					else if (i == VK_RBUTTON) // Right mouse button is up
+					{
+						(*it)->onRightMouseUp(m_currentMousePos);
+					}
+					else // Key is up
+					{
+						(*it)->onKeyUp(i);
+					}
 				}
 			}
 		}

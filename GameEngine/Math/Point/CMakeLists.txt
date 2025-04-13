@@ -1,7 +1,7 @@
 #=============================================================================
 #  C O P Y R I G H T
 #-----------------------------------------------------------------------------
-#  Copyright (c) 2024 by Hoka David-Stelian. All rights reserved.
+#  Copyright (c) 2025 by Hoka David-Stelian. All rights reserved.
 #
 #  This file is property of Hoka David-Stelian. Any unauthorized copy, use or
 #  distribution is an offensive act against international law and may be 
@@ -12,13 +12,12 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 # Project name
-project(InputSystem)
+project(Point)
 
 # Output of the project will be a SHARED library (dll)
 add_library(${PROJECT_NAME} SHARED
-    "inc/InputListener.hpp"
-    "inc/InputSystem.hpp"
-    "src/InputSystem.cpp"
+    "inc/Point.hpp"
+    "src/Point.cpp"
 )
 
 # Setting path to headers
@@ -29,7 +28,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        Point
+        d3d11.lib
 )
 
 # Set the runtime to /MT or /Mtd in order to build properly

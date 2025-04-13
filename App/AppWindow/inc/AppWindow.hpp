@@ -54,6 +54,7 @@ class VertexShader;
 class PixelShader;
 class ConstantBuffer;
 class InputSystem;
+class Point;
 
 /**
  * @class AppWindow
@@ -124,9 +125,24 @@ public:
     /// </summary>
     virtual void onDestroy() override;
 
+	/// <summary>
+	/// Called when the application window receives focus.
+	/// </summary>
+	virtual void onFocus() override;
+
+	/// <summary>
+	/// Called when the application window loses focus.
+	/// </summary>
+	virtual void onLostFocus() override;
+
     // Inherited via InputListener
     void onKeyDown(int key) override;
     void onKeyUp(int key) override;
+	virtual void onMouseMove(const Point& deltaMousePos) override;
+	void onLeftMouseDown(const Point& mousePos) override;
+	void onLeftMouseUp(const Point& mousePos) override;
+	void onRightMouseDown(const Point& mousePos) override;
+	void onRightMouseUp(const Point& mousePos) override;
 
 private:
 
@@ -174,6 +190,8 @@ private:
 
     float m_rot_x = 0.0f;
     float m_rot_y = 0.0f;
+
+	float m_scale_cube = 1.0f;
 
     /*--------------------------------------------------------------
 		Friends
