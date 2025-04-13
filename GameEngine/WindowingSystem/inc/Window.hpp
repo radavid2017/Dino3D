@@ -157,6 +157,16 @@ public:
 	/// </summary>
 	virtual void onDestroy();
 
+	/// <summary>
+	/// Called when the window receives keyboard or mouse input.
+	/// </summary>
+	virtual void onFocus();
+
+	/// <summary>
+	/// Called when the window loses focus.
+	/// </summary>
+	virtual void onLostFocus();
+
 protected:
 
 	/*--------------------------------------------------------------

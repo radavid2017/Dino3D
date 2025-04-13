@@ -41,6 +41,7 @@
 
 // Forward declarations
 class InputListener;
+#include "Point.hpp"
 #include <unordered_set>
 
 class InputSystem
@@ -58,6 +59,9 @@ private:
 	std::unordered_set<InputListener*> m_listeners; // List of listeners
 	unsigned char m_keysState[256] = {}; // Keyboard state array
 	unsigned char m_oldKeyState[256] = {}; // Previous keyboard state array
+	Point m_oldMousePos; // Previous mouse position
+	Point m_currentMousePos; // Current mouse position
+	bool m_firstTime = true; // First time flag
 };
 
 #endif // !_INPUT_SYSTEM_H_
